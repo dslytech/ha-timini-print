@@ -2,6 +2,8 @@
   <img src="custom_components/timini_print/brand/logo.png" alt="TiMini Print logo" width="180">
 </p>
 
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=dslytech&repository=ha-timini-print&category=integration)
+
 # TiMini Print for Home Assistant
 
 A HACS-installable integration for the companion **TiMini Print Server**
