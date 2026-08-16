@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="custom_components/timini_print/brand/logo.png" alt="TiMini Print logo" width="180">
+</p>
+
 # TiMini Print for Home Assistant
 
 A HACS-installable integration for the companion **TiMini Print Server**
