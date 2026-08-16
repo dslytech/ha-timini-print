@@ -181,3 +181,5 @@ add-on over HTTP - it contains none of
 All credit for actually talking to the printer goes to
 [Dejniel](https://github.com/Dejniel)'s TiMini-Print project; this repo
 is an independent Home Assistant integration built on top, not a fork.
+
+* Developed with the assistance of Anthropic Claude.
