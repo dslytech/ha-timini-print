@@ -1,0 +1,21 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add TiMini Print",
+        "description": "Connect to a TiMini Print Server add-on already installed and running on your Home Assistant host. This step only asks the add-on to scan for printers to confirm it's reachable - it does not print anything, so no paper is used during setup.",
+        "data": {
+          "name": "Name",
+          "host": "Host (usually the same IP as your Home Assistant instance, since the add-on runs alongside it)",
+          "port": "Port (default install: 8096)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach the TiMini Print add-on. Check host/port, and that the add-on is installed, running, and its own web UI works at http://<host>:<port>/."
+    },
+    "abort": {
+      "already_configured": "This TiMini Print add-on connection is already configured."
+    }
+  }
+}
