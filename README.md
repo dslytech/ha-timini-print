@@ -51,9 +51,13 @@ cases. On your dashboard: Edit Dashboard → Add Card → search for
 **"TiMini Print"** in the card picker (or add a Manual card with
 `type: custom:timini-print-card`). It gives you a text box + a
 "Characters per line" size control + print darkness + a printer picker
-(with a **Scan** button, same as the add-on's own web UI), and a file
-picker for images/PDFs, all in one card - no helpers or scripts to set
-up.
+(with a **Scan** button, plus a second **"Use Home Assistant's
+Bluetooth list"** button - see "Scanning without competing with Home
+Assistant's own Bluetooth" below), an **"Unsupported / unrecognized
+device"** checkbox that reveals a searchable model picker for
+printers TiMini-Print doesn't auto-recognize, and a file picker for
+images/PDFs with a live black & white preview - all in one card, no
+helpers or scripts to set up.
 
 The card's own UI text defaults to **English** regardless of your Home
 Assistant language setting. Hungarian, German, and Polish are also
@@ -132,10 +136,17 @@ data:
 `text_columns` controls the printed text size - fewer columns means
 bigger letters, more means smaller (matches the "Characters per line"
 setting in TiMini-Print's own Android app). `darkness` (1-5) controls
-the printer's thermal intensity. Both are optional; leave either out
-for TiMini-Print's own defaults. See the add-on's own README ("Text
-size and print darkness: native controls, not a workaround") for the
-full story of how these were found.
+the printer's thermal intensity. `printer_model` optionally forces a
+specific model key (as shown by TiMini-Print's `--list-models`, or its
+GUI's "Treat as model" dropdown) - useful for printers that show up as
+"manual model required" in a scan. All three are optional; leave any
+out for TiMini-Print's own defaults. The bundled Lovelace card has an
+"Unsupported / unrecognized device" checkbox that reveals a
+searchable model picker (backed by a new `list_models` service) for
+this, rather than needing to type the key blind. See the add-on's own
+README ("Text size and print darkness: native controls, not a
+workaround", and "Forcing an unrecognized printer's model") for the
+full story.
 
 (Use the same name/address a scan shows, on the add-on's own web UI or
 via `timini_print`'s add-on `/scan` endpoint.)
@@ -160,6 +171,37 @@ There's also `timini_print.print_image_data`, which takes base64 image
 data directly instead of a file path - this is what the bundled
 Lovelace card's file-upload button uses internally, so you generally
 won't need to call it by hand unless building your own card/script.
+
+## Scanning without competing with Home Assistant's own Bluetooth
+
+If Home Assistant's own built-in "Bluetooth" integration is enabled,
+it actively holds/monitors your host's Bluetooth adapter - this can
+cause the add-on's own scan (via TiMini-Print's `--scan`) to come back
+empty, since both are trying to use the same physical adapter at once.
+
+Rather than asking you to disable HA's own Bluetooth integration, the
+card has a second button - **"Use Home Assistant's Bluetooth list"** -
+that calls a new `list_ha_bluetooth_devices` service. This reads
+whatever devices HA's own Bluetooth integration has already
+(passively) discovered, straight from Home Assistant Core's own
+cache - no new scan is triggered, so there's no contention with the
+add-on at all. Found devices (including ones TiMini-Print wouldn't
+otherwise recognize, e.g. a TV or a phone) get added to the printer
+picker, prefixed `[HA]`, alongside anything the add-on's own scan
+found - pick one, then tick "Unsupported / unrecognized device" to
+force a model for it if needed. Requires HA's own "Bluetooth"
+integration to be enabled.
+
+Note: this has been confirmed to work for *discovery* (finding a
+device this way and getting it into the printer picker) and printing
+has succeeded using an address picked this way - but the exact
+end-to-end path (HA's passive discovery → this card → the add-on →
+the add-on's own Bluetooth connection) hasn't been repeatedly
+re-tested, so treat it as reliable-in-practice-so-far rather than
+exhaustively confirmed. See the add-on's own README
+("Scan finds nothing...") for the full technical breakdown of why
+this works and what still goes through the add-on's own Bluetooth
+stack regardless.
 
 ## Status / disclaimer
 
