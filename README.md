@@ -71,7 +71,7 @@ language: hu   # or: en, de, pl
 
 Anything not (yet) translated falls back to English automatically.
 Translations live as plain JSON files under this integration's
-`www/lang/` folder (`en.json`, `hu.json`, `de.json`, `pl.json`) - copy
+`wwww/lang/` folder (`en.json`, `hu.json`, `de.json`, `pl.json`) - copy
 one and add a new `language: xx` entry to contribute another.
 
 If the card doesn't show up in the picker (e.g. a Home Assistant
