@@ -172,6 +172,64 @@ data directly instead of a file path - this is what the bundled
 Lovelace card's file-upload button uses internally, so you generally
 won't need to call it by hand unless building your own card/script.
 
+### Example automations
+
+A couple of fun ideas using `print_text` with a Jinja template for the
+message - since it's just a Home Assistant automation, anything you
+can template, you can print.
+
+**Weekly "lottery numbers" (every Saturday morning)**
+
+```yaml
+alias: Weekly lottery numbers
+trigger:
+  - platform: time
+    at: "08:00:00"
+condition:
+  - condition: time
+    weekday:
+      - sat
+action:
+  - service: timini_print.print_text
+    data:
+      message: >
+        {% set pool = range(1, 91) | list %}
+        {% set ns = namespace(nums=[], pool=pool) %}
+        {% for i in range(5) %}
+          {% set pick = ns.pool | random %}
+          {% set ns.nums = ns.nums + [pick] %}
+          {% set ns.pool = ns.pool | reject('eq', pick) | list %}
+        {% endfor %}
+        Today's lucky numbers:
+        {{ ns.nums | sort | join(', ') }}
+      text_columns: 20
+mode: single
+```
+
+**Daily "fortune cookie" quote**
+
+```yaml
+alias: Daily fortune cookie
+trigger:
+  - platform: time
+    at: "07:00:00"
+action:
+  - service: timini_print.print_text
+    data:
+      message: >
+        {% set quotes = [
+          "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+          "Every great journey begins with a single step.",
+          "The best time to plant a tree was twenty years ago. The second best time is now.",
+          "Be the change you wish to see in the world."
+        ] %}
+        🥠 {{ quotes | random }}
+      text_columns: 24
+mode: single
+```
+
+Edit either one under Settings → Automations & Scenes → Create Automation → "Edit in YAML" (top-right ⋮ menu).
+
 ## Scanning without competing with Home Assistant's own Bluetooth
 
 If Home Assistant's own built-in "Bluetooth" integration is enabled,
